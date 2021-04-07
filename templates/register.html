@@ -25,16 +25,22 @@
         <div class="row mt-5">
             <div class="col-12">
             <form method="POST">
+                {{ form.csrf_token }}
                 <div class="form-group">
-                    <label for="userid">아이디</label>
-                    <input type="text" class="form-control" id="userid" placeholder="아이디" name="userid" />
-                    <label for="username">사용자이름</label>
-                    <input type="text" class="form-control" id="username" placeholder="사용자 이름" name="username" />
-                    <label for="username">비밀번호</label>
-                    <input type="password" class="form-control" id="password" placeholder="비밀번호" name="password" />
-                    <label for="username">비밀번호 확인</label>
-                    <input type="password" class="form-control" id="re-password" placeholder="비밀번호 확인"
-                        name="re-password" />
+                    {{ form.userid.label("아이디") }}
+                    {{ form.userid(class="form-control", placeholder="아이디") }}
+                </div>
+                <div class="form-group">
+                    {{ form.username.label("사용자 이름") }}
+                    {{ form.username(class="form-control", placeholder="사용자 이름") }}
+                </div>
+                <div class="form-group">
+                    {{ form.password.label("비밀번호") }}
+                    {{ form.password(class="form-control", placeholder="비밀번호") }}
+                </div>
+                <div class="form-group">
+                    {{ form.re_password.label("비밀번호 확인") }}
+                    {{ form.re_password(class="form-control", placeholder="비밀번호 확인") }}
                 </div>
                 <button type="submit" class="btn btn-primary">등록</button>
             </form>
