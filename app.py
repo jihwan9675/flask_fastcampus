@@ -1,14 +1,23 @@
 import os 
 from flask import Flask, request, redirect, render_template
 from flask_sqlalchemy import SQLAlchemy
+from flask import session
 from models import db
 from models import Fcuser
 from flask_wtf.csrf import CSRFProtect
-from forms import RegisterForm
+from forms import RegisterForm, LoginForm
 
 app = Flask(__name__)
 
-
+@app.route('/login', methods=['GET','POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        userid = form.data.get('userid')
+        session['userid'] = userid
+        return redirect('/')
+        
+    return render_template('login.html', form = form)
 
 @app.route('/register', methods=['GET','POST'])
 def register():
@@ -22,14 +31,15 @@ def register():
         db.session.add(fcuser)
         db.session.commit()
         print('Success!')
-        
+
         return redirect('/')
          
     return render_template('register.html', form = form)
 
 @app.route('/')
 def hello():
-    return render_template('hello.html')
+    userid = session['userid']
+    return render_template('hello.html', userid=userid)
 
 if __name__ == "__main__":
     basedir = os.path.abspath(os.path.dirname(__file__))
