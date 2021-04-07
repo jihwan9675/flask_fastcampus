@@ -6,7 +6,9 @@ from models import db
 
 
 app = Flask(__name__)
-
+@app.route('/register')
+def register():
+    return render_template('register.html')
 @app.route('/')
 def hello():
     return render_template('hello.html')
@@ -18,8 +20,8 @@ if __name__ == "__main__":
     app.config['SQLALCHEMY_DATABASE_URI'] ="sqlite:///"+dbfile
     app.config['SQLALCHEMY_COMMIT_ON_TREEDOWN'] = True
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
     db.init_app(app)
+
     db.app = app
     db.create_all()
     
