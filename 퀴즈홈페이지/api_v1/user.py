@@ -54,13 +54,13 @@ def user_detail(uid):
     user = Fcuser.query.filter(Fcuser.id == uid).first()
     return jsonify(user.serialize)
 
-@api.route('/login',methods=['POST'])
-def login():
-    data = request.get_json()
-    userid = data.get('userid')
-    password = data.get('password')
+# @api.route('/login',methods=['POST'])
+# def login():
+#     data = request.get_json()
+#     userid = data.get('userid')
+#     password = data.get('password')
 
-    if Fcuser.query.filter(Fcuser.userid==userid and Fcuser.password==password).first():
-        return jsonify()
-    else:
-        return jsonify({'errors':'wrong'})
+#     if Fcuser.query.filter(Fcuser.userid==userid and Fcuser.password==password).first():
+#         return jsonify()
+#     else:
+#         return jsonify({'errors':'wrong'})
