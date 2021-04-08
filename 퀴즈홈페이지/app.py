@@ -11,6 +11,10 @@ app.register_blueprint(api_v1, url_prefix='/api/v1')
 def register():
     return render_template('register.html')
 
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 dbfile = os.path.join(basedir, 'db.sqlite')
 
