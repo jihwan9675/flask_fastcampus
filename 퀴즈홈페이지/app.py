@@ -16,6 +16,10 @@ def register():
 def login():
     return render_template('login.html')
 
+@app.route('/')
+def home():
+    return render_template('home.html')
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 dbfile = os.path.join(basedir, 'db.sqlite')
 
@@ -29,7 +33,11 @@ def authenticate(username, password):
     if user.password == password:
         return user
 
-jwt = JWT(app, authenticate)
+def identity(payload):
+    userid = payload['identity']
+    return Fcuser.query.filter(Fcuser.id==userid).first()
+
+jwt = JWT(app, authenticate, identity)
 
 db.init_app(app)
 db.app = app
