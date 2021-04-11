@@ -32,7 +32,6 @@ def slack_todos():
         ret_msg = 'todo가 생성되었습니다.'
 
     elif cmd == 'list':
-        print()
         pass
 
     return ret_msg
