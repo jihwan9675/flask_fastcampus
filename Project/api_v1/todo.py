@@ -2,12 +2,16 @@ from flask import jsonify, request, Blueprint
 import requests
 from . import api
 from models import Todo, db
+import datetime
+
+def send_slack(msg):
+    res = requests.post('https://hooks.slack.com/services/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',
+                            json={'text': msg}, headers={'Content-Type': 'application/json'})
 
 @api.route('/todos', methods=['GET', 'POST'])
 def todos():
     if request.method == 'POST':
-        res = requests.post('https://hooks.slack.com/services/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',
-                            json={'text': 'hello world'}, headers={'Content-Type': 'application/json'})
+        send_slack('TODO가 생성되었습니다.') # 사용자 정보, 할일 제목, 기한
 
     elif request.method == 'GET':
         pass
@@ -30,6 +34,7 @@ def slack_todos():
         db.session.commit()
 
         ret_msg = 'todo가 생성되었습니다.'
+        send_slack('[%s] %s'%(str(datetime.datetime.now()), todo_name))
 
     elif cmd == 'list':
         todos = Todo.query.all()
