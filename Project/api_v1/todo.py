@@ -33,6 +33,7 @@ def slack_todos():
 
     elif cmd == 'list':
         todos = Todo.query.all()
-        
+        for idx, todo in enumerate(todos):
+            ret_msg += '%d. %s (~ %s)\n'%(idx+1, todo.title, str(todo.tstamp))
 
     return ret_msg
