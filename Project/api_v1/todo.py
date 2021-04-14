@@ -5,7 +5,7 @@ from models import Todo, db
 import datetime
 
 def send_slack(msg):
-    res = requests.post('https://hooks.slack.com/services/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',
+    res = requests.post('https://hooks.slack.com/services/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',
                             json={'text': msg}, headers={'Content-Type': 'application/json'})
 
 @api.route('/todos', methods=['GET', 'POST'])
