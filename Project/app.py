@@ -1,10 +1,43 @@
 import os
-from flask import Flask
+from flask import Flask, request, render_template, redirect, session
 from api_v1 import api as api_v1
-from models import db
+from models import db, Fcuser
+from forms import RegisterForm, LoginForm
 
 app = Flask(__name__)
 app.register_blueprint(api_v1, url_prefix = '/api/v1')
+
+@app.route('/', methods =['GET'])
+def home():
+    userid = session.get('userid')
+    return render_template('home.html', userid=userid)
+
+@app.route('/login', methods =['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        session['userid'] = form.data.get('userid')
+        return redirect('/')
+    return render_template('login.html', form = form)
+
+@app.route('/logout', methods =['GET'])
+def logout():
+    session.pop('userid')
+    return redirect('/')
+
+@app.route('/register', methods =['GET', 'POST'])
+def register():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        fcuser = Fcuser()
+        fcuser.userid = form.data.get('userid')
+        fcuser.password = form.data.get('password')
+
+        db.session.add(fcuser)
+        db.session.commit()
+
+        return redirect('/')
+    return render_template('register.html', form=form)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 dbfile = os.path.join(basedir,'db.sqlite')
