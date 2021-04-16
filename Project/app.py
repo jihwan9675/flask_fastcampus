@@ -9,9 +9,11 @@ app.register_blueprint(api_v1, url_prefix = '/api/v1')
 
 @app.route('/', methods =['GET'])
 def home():
-    userid = session.get('userid')
-    fcuser = Fcuser.query.filter_by(userid=userid).first()
-    todos = Todo.query.filter_by(fcuser_id = fcuser.id)
+    userid = session.get('userid', None)
+    todos = [] 
+    if userid:            
+        fcuser = Fcuser.query.filter_by(userid=userid).first()
+        todos = Todo.query.filter_by(fcuser_id = fcuser.id)
 
     return render_template('home.html', userid=userid, todos= todos)
 

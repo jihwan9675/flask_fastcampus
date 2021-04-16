@@ -10,7 +10,7 @@ def send_slack(msg):
 
 @api.route('/todos/done', methods=['PUT'])
 def todos_done():
-    userid = session.get('userid', 1)
+    userid = session.get('userid', None)
     if not userid:
         return jsonify(), 401
 
@@ -77,10 +77,18 @@ def slack_todos():
     cmd, *args = res
     ret_msg = ' '
     if cmd == 'create':
-        todo_name = args[0]
-        todo = Todo()
+        todo_user_id = args[0]
+        todo_name = args[1]
+        todo_due = args[2]
         
+        fcuser = Fcuser.query.filter_by(userid=todo_user_id).first()
+        
+        todo = Todo()
+        todo.fcuser_id = fcuser.id
         todo.title = todo_name
+        todo.due = todo_due
+        todo.status = 0 
+
         db.session.add(todo)
         db.session.commit()
 
@@ -100,6 +108,7 @@ def slack_todos():
         todo.status=1
         db.session.commit()
         ret_msg = 'todo가 완료처리 되었습니다.'
+        
     elif cmd == 'undo':
         todo_id = args[0]
         todo = Todo.query.filter_by(id=todo_id).first()
