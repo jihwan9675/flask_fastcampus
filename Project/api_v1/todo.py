@@ -23,6 +23,7 @@ def todos_done():
     if todo.fcuser_id != fcuser.id:
         return jsonify(), 400
     todo.status =1 
+    db.session.commit()
     send_slack('TODO가 생성되었습니다.\n사용자:%s\n할일 제목 :%s\n기한:%s'%(fcuser.userid, todo.title, todo.due)) # 사용자 정보, 할일 제목, 기한
 
     return jsonify()
