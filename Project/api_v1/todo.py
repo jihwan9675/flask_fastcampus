@@ -1,20 +1,47 @@
-from flask import jsonify, request, Blueprint
+from flask import jsonify, request, Blueprint, session
 import requests
 from . import api
 from models import Todo, db
 import datetime
 
 def send_slack(msg):
-    res = requests.post('https://hooks.slack.com/services/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',
+    res = requests.post('https://hooks.slack.com/services/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',
                             json={'text': msg}, headers={'Content-Type': 'application/json'})
 
-@api.route('/todos', methods=['GET', 'POST'])
+@api.route('/todos', methods=['GET', 'POST','DELETE'])
 def todos():
+    userid = session.get('userid', 1)
+    if not userid:
+        return jsonify(), 401
+
     if request.method == 'POST':
+        data=request.get_json()
+        todo = Todo()
+        
+        todo.title = data.get('title')
+        todo.fcuser_id = userid
+        
+        db.session.add(todo)
+        db.session.commit()
+
         send_slack('TODO가 생성되었습니다.') # 사용자 정보, 할일 제목, 기한
+        
+        return jsonify(), 201
 
     elif request.method == 'GET':
-        pass
+        todos = Todo.query.filter_by(fcuser_id=1)
+
+        return jsonify([t.serialize for t in todos])
+
+    elif request.method == 'DELETE':
+        data=request.get_json()
+        todo_id = data.get('todo_id')
+        todo = Todo.query.filter_by(id=todo_id).first()
+
+        db.session.delete()
+        db.session.commit()
+
+        return jsonify(), 203
 
     data = request.get_json()
     return jsonify(data)
