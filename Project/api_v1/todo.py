@@ -1,7 +1,7 @@
 from flask import jsonify, request, Blueprint, session
 import requests
 from . import api
-from models import Todo, db
+from models import Todo, db, Fcuser
 import datetime
 
 def send_slack(msg):
@@ -19,8 +19,10 @@ def todos():
         todo = Todo()
         
         todo.title = data.get('title')
-        todo.fcuser_id = userid
-        
+        fcuser = Fcuser.query.filter_by(userid=userid).first()
+        todo.fcuser_id = fcuser.id
+        todo.due = data.get('due')
+        todo.status = 0
         db.session.add(todo)
         db.session.commit()
 

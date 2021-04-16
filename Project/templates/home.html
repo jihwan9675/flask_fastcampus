@@ -25,6 +25,22 @@
         $(document).ready(function () {
             $("#date").datepicker({});
         })
+    function createTodo(){
+        $.ajax({
+            url : 'api/v1/todos',
+            contentType : 'application/json',
+            method : 'POST',
+            data : JSON.stringify({
+                title: $('#title').val(),
+                due : $('#date').val()
+            })
+
+        }).done(function(res){
+            $('#title').val('');
+            $('#date').val('');
+            window.location ='/';
+        });
+    }
     </script>
 </head>
 
@@ -67,7 +83,7 @@
             </div>
             <div class="col-12 col-sm-5 mt-2">
                 <!--확인-->
-                <button type="button" class='btn btn-primary'>생성</button>
+                <button type="button" class='btn btn-primary' onclick="createTodo();">생성</button>
             </div>
         </div>
 
@@ -84,12 +100,14 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% for todo in todos %}
                         <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
+                            <th scope="row">{{ todo.id }}</th>
+                            <td>{{ todo.title }}</td>
+                            <td>{{ todo.due }}</td>
+                            <td>{{ todo.status }}</td>
                         </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
