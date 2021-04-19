@@ -3,3 +3,4 @@
 2. Slack 챗봇 작성 - REST API 작성
 3. Azure 클라우드 컴퓨팅 상에서 배포
 4. Jenkins를 이용한 CI/CD  
+5. nginx, gunicorn사용
